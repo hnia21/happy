@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Greeting - App</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- PEMBACA VIEW -->
+    <div id="pembacaView" class="app-page" style="display: none;">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="navbar-left">
+                <h1 class="app-title">🎉 Happy Birthday!</h1>
+            </div>
+            <div class="navbar-right">
+                <span class="user-info">
+                    <span id="pembaca-username-display"></span>
+                    <span id="pembaca-role-badge"></span>
+                </span>
+                <button id="pembaca-logoutBtn" class="logout-btn">Logout</button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <div class="app-container">
+            <!-- Background Music -->
+            <audio id="bgMusic" loop>
+                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+            </audio>
+
+            <!-- Pages Container -->
+            <div class="pages-container">
+                <!-- Page 1: Greeting -->
+                <div class="page" id="page1">
+                    <div class="page-content">
+                        <h2>Selamat Ulang Tahun! 🎂</h2>
+                        <p id="page1-message">Semoga hari istimewa Anda penuh dengan kebahagiaan dan berkah.</p>
+                    </div>
+                </div>
+
+                <!-- Page 2: Prayer -->
+                <div class="page" id="page2">
+                    <div class="page-content">
+                        <h2>Doa Spesial 🙏</h2>
+                        <p id="page2-message">Semoga setiap langkahmu dipandu oleh kasih sayang Tuhan, dan setiap mimpi menjadi kenyataan yang indah.</p>
+                    </div>
+                </div>
+
+                <!-- Page 3: Document -->
+                <div class="page" id="page3">
+                    <div class="page-content">
+                        <h2>Momen Spesial 📸</h2>
+                        <div id="page3-content" class="document-container">
+                            <p>Tempat untuk foto, dokumen, atau konten spesial lainnya.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 4: Final Message & WhatsApp -->
+                <div class="page" id="page4">
+                    <div class="page-content">
+                        <h2>Terima Kasih 💝</h2>
+                        <p id="page4-message">Selamat ulang tahun yang luar biasa!</p>
+                        <div class="whatsapp-section">
+                            <button id="sendWhatsappBtn" class="whatsapp-btn">
+                                📱 Kirim Pesan WhatsApp
+                            </button>
+                            <p class="wa-note">Pesan akan dikirim ke nomor yang telah diatur</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Indicator -->
+            <div class="page-indicator">
+                <span id="pageCounter">1 / 4</span>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button id="prevBtn" class="control-btn prev-btn">⬅️ Sebelumnya</button>
+            <button id="musicToggleBtn" class="control-btn music-btn">🔊 Musik: ON</button>
+            <button id="nextBtn" class="control-btn next-btn">Selanjutnya ➡️</button>
+        </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD VIEW -->
+    <div id="adminView" style="display: none;">
+        <div class="admin-dashboard">
+            <!-- Sidebar -->
+            <aside class="admin-sidebar">
+                <div class="admin-header">
+                    <div class="admin-logo">🎉 Admin Panel</div>
+                </div>
+                
+                <nav class="admin-menu">
+                    <button class="admin-menu-item active" data-page="pembaca">
+                        <span class="menu-icon">👥</span>
+                        <span class="menu-label">Manage Reviewers</span>
+                    </button>
+                    <button class="admin-menu-item" data-page="content">
+                        <span class="menu-icon">📝</span>
+                        <span class="menu-label">Edit Content</span>
+                    </button>
+                    <button class="admin-menu-item" data-page="settings">
+                        <span class="menu-icon">⚙️</span>
+                        <span class="menu-label">Settings</span>
+                    </button>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="admin-main">
+                <div class="admin-top-bar">
+                    <h1 class="admin-title" id="pageTitle">Kelola Pembaca</h1>
+
+                    <div class="admin-profile" id="adminProfile">
+                        <button class="admin-profile-trigger" id="adminProfileTrigger" aria-expanded="false">
+                            <div class="admin-profile-avatar" id="adminAvatar">A</div>
+                            <span class="admin-profile-name" id="adminUsername">Admin</span>
+                            <span class="admin-profile-chevron">▾</span>
+                        </button>
+                        <div class="admin-profile-dropdown" id="adminProfileDropdown">
+                            <button class="admin-dropdown-item" id="editPasswordBtn">
+                                <span>🔑</span> Edit Sandi
+                            </button>
+                            <button class="admin-dropdown-item danger" id="admin-logoutBtn">
+                                <span>🚪</span> Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-content">
+                    <!-- PEMBACA PAGE -->
+                    <div id="pembacaPage" class="admin-section-page">
+                        <div class="admin-section">
+                            <h3 id="pembacaFormTitle">👥 Tambah Pembaca Baru</h3>
+                            <input type="hidden" id="editPembacaId" value="">
+                            <div class="form-grid">
+                                <div class="form-field">
+                                    <label>Username Pembaca</label>
+                                    <input type="text" id="newPembacaUsername" placeholder="Masukkan username">
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 20px;">
+                                <div class="form-field">
+                                    <label>Pesan Default (Page 1)</label>
+                                    <textarea id="newPembacaMessage" placeholder="Pesan khusus untuk pembaca ini..." rows="4"></textarea>
+                                </div>
+                            </div>
+                            <button id="pembacaSubmitBtn" class="btn-primary" onclick="submitPembacaForm()">➕ Tambah Pembaca</button>
+                        </div>
+
+
+                        <button id="cancelEditBtn"
+                            class="btn-secondary"
+                            onclick="cancelEditPembaca()"
+                            style="display:none;">
+                            Batal
+                        </button>
+                        <div class="admin-section">
+                            <h3>📋 Daftar Pembaca</h3>
+                            <div id="pembacaListContainer" class="pembaca-list-container">
+                                <!-- Reviewer cards akan dimuat di sini -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CONTENT EDITOR PAGE -->
+                    <div id="contentPage" class="admin-section-page" style="display: none;">
+                        <div class="admin-section">
+                            <h3>📝 Edit Content Setiap Reviewer</h3>
+                            
+                            <div style="margin-bottom: 20px;">
+                                <label class="form-field" style="margin-bottom: 10px;">
+                                    <span style="font-weight: 600; margin-bottom: 8px; display: block;">Pilih Pembaca</span>
+                                    <select id="pembacaSelector" onchange="loadPembacaContent()">
+                                        <option value="">-- Pilih Pembaca --</option>
+                                    </select>
+                                </label>
+                            </div>
+
+                            <div id="contentEditorContainer" style="display: none;">
+                                <!-- Page tabs -->
+                                <div class="page-tabs">
+                                    <button class="page-tab active" onclick="switchContentPage(1)">Page 1: Ucapan</button>
+                                    <button class="page-tab" onclick="switchContentPage(2)">Page 2: Doa</button>
+                                    <button class="page-tab" onclick="switchContentPage(3)">Page 3: Dokumen</button>
+                                    <button class="page-tab" onclick="switchContentPage(4)">Page 4: Pesan Akhir</button>
+                                </div>
+
+                                <!-- Content editors -->
+                                <div id="contentPage1" class="page-editor active">
+                                    <div class="form-field">
+                                        <label>Ucapan (Page 1)</label>
+                                        <textarea id="content-page1" placeholder="Masukkan ucapan..." rows="5"></textarea>
+                                    </div>
+                                </div>
+
+                                <div id="contentPage2" class="page-editor">
+                                    <div class="form-field">
+                                        <label>Doa (Page 2)</label>
+                                        <textarea id="content-page2" placeholder="Masukkan doa..." rows="5"></textarea>
+                                    </div>
+                                </div>
+
+                                <div id="contentPage3" class="page-editor">
+                                    <div class="form-field">
+                                        <label>Upload Gambar (Page 3)</label>
+                                        <input type="file" id="content-page3-image" accept="image/*">
+                                        <div class="form-hint">Format JPG/PNG. Gambar otomatis dikompres agar hemat penyimpanan.</div>
+                                    </div>
+
+                                    <div id="page3ImagePreviewWrapper" style="display:none; margin-top: 16px;">
+                                        <img id="page3ImagePreview" src="" alt="Preview gambar">
+                                        <button type="button" class="btn-secondary" style="margin-top: 10px;" onclick="removePage3Image()">🗑️ Hapus Gambar</button>
+                                    </div>
+
+                                    <div class="form-field" style="margin-top: 20px;">
+                                        <label>Keterangan / Caption (opsional)</label>
+                                        <textarea id="content-page3" placeholder="Keterangan untuk gambar ini..." rows="3"></textarea>
+                                    </div>
+                                </div>
+
+                                <div id="contentPage4" class="page-editor">
+                                    <div class="form-field">
+                                        <label>Pesan Akhir (Page 4)</label>
+                                        <textarea id="content-page4" placeholder="Masukkan pesan akhir..." rows="5"></textarea>
+                                    </div>
+                                </div>
+
+                                <button class="btn-primary" style="margin-top: 20px;" onclick="savePembacaContent()">💾 Simpan Content</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SETTINGS PAGE -->
+                    <div id="settingsPage" class="admin-section-page" style="display: none;">
+                        <div class="admin-section">
+                            <h3>🎵 Background Music</h3>
+                            <div class="form-field">
+                                <label>URL Musik Latar</label>
+                                <input type="url" id="musicURLInput" placeholder="https://example.com/music.mp3">
+                                <div class="form-hint">Format MP3 atau audio lainnya yang dapat di-stream</div>
+                            </div>
+                        </div>
+
+                        <div class="admin-section">
+                            <h3>💬 WhatsApp Configuration</h3>
+                            <div class="form-grid">
+                                <div class="form-field">
+                                    <label>Nomor WhatsApp Penerima</label>
+                                    <input type="text" id="waNumberInput" placeholder="62812345678">
+                                    <div class="form-hint">Format: 62 untuk Indonesia (tanpa +)</div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 20px;">
+                                <div class="form-field">
+                                    <label>Pesan WhatsApp</label>
+                                    <textarea id="waMessageInput" placeholder="Masukkan pesan..." rows="4"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="admin-section">
+                            <h3>📄 Konten Default (Global)</h3>
+                            <div style="margin-bottom: 20px;">
+                                <div class="form-field">
+                                    <label>Default Page 1 Message</label>
+                                    <textarea id="defaultPage1Input" placeholder="Default untuk reviewer baru..." rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 20px;">
+                                <div class="form-field">
+                                    <label>Default Page 2 Message</label>
+                                    <textarea id="defaultPage2Input" placeholder="Default untuk reviewer baru..." rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 20px;">
+                                <div class="form-field">
+                                    <label>Default Page 4 Message</label>
+                                    <textarea id="defaultPage4Input" placeholder="Default untuk reviewer baru..." rows="3"></textarea>
+                                </div>
+                            </div>
+
+                            <button class="btn-primary" onclick="saveAdminSettings()">💾 Simpan Semua Settings</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- EDIT PASSWORD MODAL -->
+    <div class="modal" id="editPasswordModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeEditPasswordModal">&times;</button>
+            <h2>🔑 Edit Sandi Admin</h2>
+
+            <div class="form-field" style="margin-bottom: 16px;">
+                <label>Sandi Saat Ini</label>
+                <input type="password" id="currentPasswordInput" placeholder="Masukkan sandi saat ini">
+            </div>
+            <div class="form-field" style="margin-bottom: 16px;">
+                <label>Sandi Baru</label>
+                <input type="password" id="newPasswordInput" placeholder="Minimal 6 karakter">
+            </div>
+            <div class="form-field" style="margin-bottom: 24px;">
+                <label>Konfirmasi Sandi Baru</label>
+                <input type="password" id="confirmPasswordInput" placeholder="Ulangi sandi baru">
+            </div>
+
+            <button class="btn-primary" onclick="changeAdminPassword()">💾 Simpan Sandi Baru</button>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

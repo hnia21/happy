@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Greeting - Login</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-card">
+            <h1 class="login-title">🎉 Birthday Greeting</h1>
+            <p class="login-subtitle">Pilih role Anda</p>
+            
+            <!-- Tab Navigation -->
+            <div class="login-tabs">
+                <button type="button" class="tab-btn active" data-tab="admin-tab">👨‍💼 Admin</button>
+                <button type="button" class="tab-btn" data-tab="pembaca-tab">👤 Pembaca</button>
+            </div>
+
+            <!-- Admin Login Form -->
+            <form id="adminLoginForm" class="login-form active-tab">
+                <div class="form-group">
+                    <label for="admin-username">Username</label>
+                    <input 
+                        type="text" 
+                        id="admin-username" 
+                        placeholder="Masukkan username admin"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="admin-password">Password</label>
+                    <input 
+                        type="password" 
+                        id="admin-password" 
+                        placeholder="Masukkan password"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="login-btn">Login Admin</button>
+            </form>
+
+            <!-- Pembaca Login Form -->
+            <form id="pembacaLoginForm" class="login-form">
+                <div class="form-group">
+                    <label for="pembaca-username">Masukkan Username Pembaca</label>
+                    <input 
+                        type="text" 
+                        id="pembaca-username" 
+                        placeholder="Cukup username saja"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="login-btn">Login Pembaca</button>
+            </form>
+
+            <div id="errorMessage" class="error-message"></div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>
